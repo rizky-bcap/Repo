@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Editor, { MenuBar } from '../components/Editor';
-import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Save } from 'lucide-react';
 import { useTabs } from '../store/useTabs';
@@ -22,6 +21,7 @@ export default function PageDetail() {
     const { fetchPages, updatePage } = usePages();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState<any>(null);
+    const [editorInstance, setEditorInstance] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
