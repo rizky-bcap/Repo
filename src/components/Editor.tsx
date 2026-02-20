@@ -124,7 +124,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     disabled={!editor.can().chain().focus().toggleBold().run()}
                     className={cn("h-8 w-8", editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
                 >
-                    <Bold className="h-4 w-4" />
+                    <Bold className="h-5 w-5" />
                 </Button>
                 <Button
                     variant="ghost"
@@ -133,7 +133,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     disabled={!editor.can().chain().focus().toggleItalic().run()}
                     className={cn("h-8 w-8", editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <Italic className="h-4 w-4" />
+                    <Italic className="h-5 w-5" />
                 </Button>
             </div>
 
@@ -146,7 +146,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                     className={cn("h-8 w-8", editor.isActive('heading', { level: 1 }) ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <Heading1 className="h-4 w-4" />
+                    <Heading1 className="h-5 w-5" />
                 </Button>
                 <Button
                     variant="ghost"
@@ -154,7 +154,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                     className={cn("h-8 w-8", editor.isActive('heading', { level: 2 }) ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <Heading2 className="h-4 w-4" />
+                    <Heading2 className="h-5 w-5" />
                 </Button>
             </div>
 
@@ -167,7 +167,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                     className={cn("h-8 w-8", editor.isActive('bulletList') ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <List className="h-4 w-4" />
+                    <List className="h-5 w-5" />
                 </Button>
                 <Button
                     variant="ghost"
@@ -175,7 +175,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                     className={cn("h-8 w-8", editor.isActive('orderedList') ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <ListOrdered className="h-4 w-4" />
+                    <ListOrdered className="h-5 w-5" />
                 </Button>
                 <Button
                     variant="ghost"
@@ -183,7 +183,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
                     className={cn("h-8 w-8", editor.isActive('blockquote') ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <Quote className="h-4 w-4" />
+                    <Quote className="h-5 w-5" />
                 </Button>
             </div>
         </div>

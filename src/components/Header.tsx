@@ -42,7 +42,7 @@ export default function Header() {
                         </h1>
                     </Link>
                 </div>
-                <div className="px-6">
+                <div className="px-6 flex-1 max-w-sm">
                     <GlobalSearch />
                 </div>
             </div>

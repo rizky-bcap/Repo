@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, FileText, Command } from 'lucide-react';
+import { Search, FileText } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function GlobalSearch() {
@@ -77,14 +77,14 @@ export default function GlobalSearch() {
     };
 
     return (
-        <div className="relative w-full max-w-md mx-auto px-4" ref={searchRef}>
+        <div className="relative w-full max-w-md" ref={searchRef}>
             <div className="relative group">
                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 group-focus-within:text-primary transition-colors" />
                 <input
                     id="global-search-input"
                     type="text"
                     placeholder="Search anything..."
-                    className="w-full h-7 pl-8 pr-12 text-[11px] bg-gray-100 dark:bg-gray-900 border-none rounded-md focus:ring-1 focus:ring-primary/20 transition-all font-medium placeholder:text-gray-500"
+                    className="w-full h-7 pl-8 pr-4 text-[11px] bg-gray-100 dark:bg-gray-900 border-none rounded-md focus:ring-1 focus:ring-primary/20 transition-all font-medium placeholder:text-gray-500"
                     value={query}
                     onChange={(e) => {
                         setQuery(e.target.value);
@@ -92,12 +92,6 @@ export default function GlobalSearch() {
                     }}
                     onFocus={() => setIsOpen(true)}
                 />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 pointer-events-none">
-                    <kbd className="p-0.5 rounded bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[8px] font-bold text-gray-400">
-                        <Command className="h-1.5 w-1.5 mb-0.5 inline-block mr-0.5" />
-                        K
-                    </kbd>
-                </div>
             </div>
 
             {/* Results Dropdown */}
