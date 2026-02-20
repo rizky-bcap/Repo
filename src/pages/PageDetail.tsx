@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Editor, { MenuBar } from '../components/Editor';
 import { Button } from '../components/ui/button';
-import { Save } from 'lucide-react';
+
 import { useTabs } from '../store/useTabs';
 import { usePages } from '../store/usePages';
 import { useAuth } from '../context/AuthContext';
@@ -134,7 +134,7 @@ export default function PageDetail() {
                 <div className="flex-1 flex items-center">
                     {isEditable ? (
                         <input
-                            className="text-sm font-bold border-none shadow-none focus:ring-0 px-0 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent transition-colors w-full"
+                            className="text-sm font-bold border-none shadow-none focus:ring-0 focus:outline-none outline-none px-0 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent transition-colors w-full"
                             placeholder="Untitled Page"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -159,10 +159,9 @@ export default function PageDetail() {
                         <Button
                             onClick={() => savePage()}
                             disabled={saving}
-                            className="gap-2 h-8 text-[11px] font-bold px-4"
+                            className="h-8 text-[11px] font-bold px-4"
                         >
-                            <Save className="h-3.5 w-3.5" />
-                            {saving ? 'Saving...' : 'Save Draft'}
+                            {saving ? 'Saving...' : 'Save'}
                         </Button>
                     )}
                 </div>
