@@ -8,11 +8,10 @@ import { useTabs } from '../store/useTabs';
 import { usePages } from '../store/usePages';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { exportToDocx } from '../lib/export';
 
 export default function PageDetail() {
     const { id } = useParams<{ id: string }>();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const isEditingMode = searchParams.get('edit') === 'true';
 
     const { user } = useAuth();
@@ -129,7 +128,7 @@ export default function PageDetail() {
     return (
         <div className="h-full flex flex-col bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
             {/* Ribbon Tier 1: Title & Actions */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-30 h-11 flex items-center shadow-sm px-6">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-30 h-10 flex items-center shadow-sm px-6">
                 <div className="flex-1 flex items-center">
                     {isEditable ? (
                         <input
@@ -144,14 +143,16 @@ export default function PageDetail() {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
-                    >
-                        Edit
-                    </Button>
-                    <div className="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1" />
+                    {!isEditable && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSearchParams({ edit: 'true' })}
+                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                        >
+                            Edit
+                        </Button>
+                    )}
                     {isEditable && (
                         <Button
                             onClick={() => savePage()}
@@ -166,7 +167,7 @@ export default function PageDetail() {
             </div>
 
             {/* Ribbon Tier 2: RTE Tools */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-11 flex items-center shadow-sm">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-10 flex items-center shadow-sm">
                 <div className="w-full">
                     {editorInstance && <MenuBar editor={editorInstance} />}
                 </div>

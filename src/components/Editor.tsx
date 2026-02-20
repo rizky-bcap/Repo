@@ -82,7 +82,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
     };
 
     return (
-        <div className="flex items-center gap-1.5 px-6 bg-white dark:bg-gray-900 sticky top-0 z-10 flex-nowrap h-11 scrollbar-hide overflow-x-auto w-full">
+        <div className="flex items-center gap-1.5 px-6 bg-white dark:bg-gray-900 sticky top-0 z-10 flex-nowrap h-10 scrollbar-hide overflow-x-auto w-full">
             <div className="flex items-center gap-1.5 shrink-0">
                 <select
                     className="h-8 px-2 border border-gray-200 dark:border-gray-800 rounded text-[11px] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none transition-colors"
