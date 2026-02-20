@@ -148,8 +148,10 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    disabled={!editor.can().chain().focus().toggleBold().run()}
+                    onMouseDown={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        editor.chain().focus().toggleBold().run();
+                    }}
                     className={cn("h-8 w-8", editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
                 >
                     <span className="font-bold text-sm">B</span>
@@ -157,8 +159,10 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    disabled={!editor.can().chain().focus().toggleItalic().run()}
+                    onMouseDown={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        editor.chain().focus().toggleItalic().run();
+                    }}
                     className={cn("h-8 w-8", editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
                 >
                     <span className="italic text-sm">I</span>
@@ -212,7 +216,7 @@ export default function Editor({ content, onChange, onReady, editable = true }: 
             !editable && "bg-transparent shadow-none"
         )}>
             {!onReady && editable && <MenuBar editor={editor} />}
-            <EditorContent editor={editor} className="flex-1 overflow-auto bg-white dark:bg-gray-900" />
+            <EditorContent editor={editor} className="flex-1 bg-white dark:bg-gray-900" />
         </div>
     );
 }
