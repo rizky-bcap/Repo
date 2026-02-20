@@ -9,6 +9,7 @@ import { useTabs } from '../store/useTabs';
 import { usePages } from '../store/usePages';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { exportToDocx } from '../lib/export';
 
 export default function PageDetail() {
     const { id } = useParams<{ id: string }>();
@@ -126,42 +127,58 @@ export default function PageDetail() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-8">
-            <div className="mb-6">
-                <div className="flex items-center justify-between gap-4">
-                    {isEditable ? (
-                        <Input
-                            className="text-xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent text-gray-900 dark:text-gray-100"
-                            placeholder="Untitled"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                    ) : (
-                        <h1 className="text-xl font-bold flex-1 text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
-                    )}
+        <div className="h-full flex flex-col bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
+            <div className="flex-1 overflow-auto">
+                <div className="max-w-[210mm] mx-auto py-12 px-4 sm:px-0">
+                    <div className="bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-800 min-h-[297mm] relative mb-12">
+                        <div className="p-[2cm]">
+                            <div className="mb-8">
+                                <div className="flex items-center justify-between gap-4">
+                                    {isEditable ? (
+                                        <Input
+                                            className="text-2xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent text-gray-900 dark:text-gray-100"
+                                            placeholder="Untitled"
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                        />
+                                    ) : (
+                                        <h1 className="text-2xl font-bold flex-1 text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
+                                    )}
 
-                    {isEditable && (
-                        <Button
-                            onClick={() => savePage()}
-                            disabled={saving}
-                            className="gap-2"
-                        >
-                            <Save className="h-4 w-4" />
-                            {saving ? 'Saving...' : 'Save'}
-                        </Button>
-                    )}
-                </div>
-                <div className="h-4 text-xs text-muted-foreground mt-2">
-                    {saving ? 'Saving changes...' : (isNewDraft ? 'Not saved yet' : (isEditable ? 'Editing mode' : 'Read-only view'))}
-                </div>
-            </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => exportToDocx(title, content)}
+                                            className="h-8 text-[11px] font-bold"
+                                        >
+                                            Export
+                                        </Button>
+                                        {isEditable && (
+                                            <Button
+                                                onClick={() => savePage()}
+                                                disabled={saving}
+                                                className="gap-2 h-8 text-[11px] font-bold"
+                                            >
+                                                <Save className="h-3.5 w-3.5" />
+                                                {saving ? 'Saving...' : 'Save'}
+                                            </Button>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="h-4 text-[10px] text-muted-foreground mt-1">
+                                    {saving ? 'Saving changes...' : (isNewDraft ? 'Not saved yet' : (isEditable ? 'Editing mode' : 'Read-only view'))}
+                                </div>
+                            </div>
 
-            <div className="min-h-[500px]">
-                <Editor
-                    content={content}
-                    editable={isEditable}
-                    onChange={(newContent) => setContent(newContent)}
-                />
+                            <Editor
+                                content={content}
+                                editable={isEditable}
+                                onChange={(newContent) => setContent(newContent)}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

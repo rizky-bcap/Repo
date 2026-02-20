@@ -28,7 +28,7 @@ export default function Header() {
     const toggleTheme = () => setIsDark(!isDark);
 
     return (
-        <header className="h-7 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between sticky top-0 z-50 transition-colors">
+        <header className="h-11 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between sticky top-0 z-50 transition-colors">
             {/* Left: Logo */}
             <div className="flex items-center h-full px-6 border-r border-gray-200 dark:border-gray-800 min-w-60">
                 <Link

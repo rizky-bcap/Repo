@@ -191,7 +191,7 @@ export default function Editor({ content, onChange, editable = true }: EditorPro
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm dark:prose-invert focus:outline-none min-h-[500px] p-6',
+                class: 'prose prose-sm dark:prose-invert focus:outline-none max-w-none',
             },
         },
     });
