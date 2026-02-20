@@ -169,12 +169,14 @@ export default function PageDetail() {
                 </div>
             </div>
 
-            {/* Ribbon Tier 2: RTE Tools */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-10 flex items-center shadow-sm">
-                <div className="w-full">
-                    {editorInstance && <MenuBar editor={editorInstance} />}
+            {/* Ribbon Tier 2: RTE Tools - only in edit mode */}
+            {isEditable && (
+                <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-10 flex items-center shadow-sm">
+                    <div className="w-full">
+                        {editorInstance && <MenuBar editor={editorInstance} />}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="flex-1 overflow-auto">
                 <div className="max-w-[210mm] mx-auto py-8">
