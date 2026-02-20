@@ -147,10 +147,9 @@ export default function PageDetail() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => exportToDocx(title, content)}
                         className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                     >
-                        Export
+                        Edit
                     </Button>
                     <div className="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1" />
                     {isEditable && (
