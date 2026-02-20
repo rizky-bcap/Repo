@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { FontFamily } from '@tiptap/extension-font-family';
-import { Extension } from '@tiptap/core';
+import { Extension, Node } from '@tiptap/core';
 
 import { cn } from '../lib/utils';
 import { useEffect } from 'react';
@@ -48,6 +48,35 @@ const FontSize = Extension.create({
                     .setMark('textStyle', { fontSize: null })
                     .removeEmptyTextStyle()
                     .run();
+            },
+        };
+    },
+});
+
+// Custom Page Break Extension
+const PageBreak = Node.create({
+    name: 'pageBreak',
+    group: 'block',
+    atom: true,
+    draggable: false,
+    selectable: true,
+
+    parseHTML() {
+        return [
+            {
+                tag: 'div[data-page-break]',
+            },
+        ];
+    },
+
+    renderHTML() {
+        return ['div', { 'data-page-break': '', class: 'page-break' }];
+    },
+
+    addKeyboardShortcuts() {
+        return {
+            'Shift-Enter': () => {
+                return this.editor.chain().insertContent({ type: this.name }).run();
             },
         };
     },
@@ -123,6 +152,7 @@ export default function Editor({ content, onChange, onReady, editable = true }: 
             TextStyle,
             FontFamily,
             FontSize,
+            PageBreak,
         ],
         content: content,
         editable: editable,
@@ -142,10 +172,6 @@ export default function Editor({ content, onChange, onReady, editable = true }: 
     // Sync content if it changes externally (e.g. loading from DB)
     useEffect(() => {
         if (editor && content && !editor.isFocused) {
-            // Check if content is different to avoid cursor jumps or loops is hard with JSON
-            // For now, we only set content if editor is empty or on initial load logic handled by parent
-            // Better approach: Parent only passes initialContent, or we compare deep equality.
-            // Here we assume content prop updates only when switching pages.
             editor.commands.setContent(content);
         }
     }, [content, editor]);

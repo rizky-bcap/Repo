@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Editor, { MenuBar } from '../components/Editor';
@@ -8,6 +8,11 @@ import { useTabs } from '../store/useTabs';
 import { usePages } from '../store/usePages';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
+// A4 page dimensions in pixels (at 96 DPI)
+const A4_PAGE_HEIGHT_PX = 1122.52;
+const A4_MARGIN_PX = 75.59;
+const A4_USABLE_HEIGHT_PX = A4_PAGE_HEIGHT_PX - (A4_MARGIN_PX * 2);
 
 export default function PageDetail() {
     const { id } = useParams<{ id: string }>();
@@ -23,9 +28,43 @@ export default function PageDetail() {
     const [editorInstance, setEditorInstance] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [pageCount, setPageCount] = useState(1);
+
+    const contentRef = useRef<HTMLDivElement>(null);
+    const observerRef = useRef<ResizeObserver | null>(null);
 
     const isNewDraft = id?.startsWith('draft-');
     const isEditable = isEditingMode || isNewDraft;
+
+    // Observe content height and calculate page count
+    const setupObserver = useCallback(() => {
+        if (observerRef.current) {
+            observerRef.current.disconnect();
+        }
+
+        observerRef.current = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const contentHeight = entry.contentRect.height;
+                const pages = Math.max(1, Math.ceil(contentHeight / A4_USABLE_HEIGHT_PX));
+                setPageCount(pages);
+            }
+        });
+
+        const editorElement = contentRef.current?.querySelector('.ProseMirror');
+        if (editorElement) {
+            observerRef.current.observe(editorElement);
+        }
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(setupObserver, 100);
+        return () => {
+            clearTimeout(timer);
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+        };
+    }, [setupObserver, editorInstance]);
 
     useEffect(() => {
         fetchPage();
@@ -66,7 +105,6 @@ export default function PageDetail() {
         setSaving(true);
         try {
             if (isNewDraft) {
-                // Create new page
                 const { data, error } = await supabase
                     .from('pages')
                     .insert([{
@@ -81,11 +119,10 @@ export default function PageDetail() {
                 if (data) {
                     removeTab(id);
                     addTab({ id: data.id, title: data.title });
-                    fetchPages(user.id); // Refresh sidebar list
+                    fetchPages(user.id);
                     navigate(`/pages/${data.id}`, { replace: true });
                 }
             } else {
-                // Update existing page
                 const { error } = await supabase
                     .from('pages')
                     .update({
@@ -96,11 +133,9 @@ export default function PageDetail() {
                     .eq('id', id);
 
                 if (error) throw error;
-                // Update local stores for immediate feedback
                 updateTab(id, { title });
                 updatePage(id, { title: title });
             }
-            // Return to view mode after saving
             setSearchParams({});
         } catch (error) {
             console.error('Error saving page:', error);
@@ -120,8 +155,6 @@ export default function PageDetail() {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [title, content, id, isNewDraft]);
-
-    // Auto-save removed as per requirements
 
     if (loading) {
         return <div className="p-8">Loading...</div>;
@@ -178,17 +211,26 @@ export default function PageDetail() {
                 </div>
             )}
 
+            {/* Document Workspace - Paginated A4 */}
             <div className="flex-1 overflow-auto">
                 <div className="max-w-[210mm] mx-auto py-8">
-                    <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 min-h-[297mm] relative mb-20 rounded-t-sm shadow-none">
-                        <div className="p-[2cm]">
-                            <Editor
-                                content={content}
-                                editable={isEditable}
-                                onReady={setEditorInstance}
-                                onChange={(newContent) => setContent(newContent)}
-                            />
-                        </div>
+                    <div className="paginated-document" ref={contentRef}>
+                        {Array.from({ length: pageCount }, (_, i) => (
+                            <div key={i} className="a4-page">
+                                {i === 0 ? (
+                                    <div className="a4-page-content">
+                                        <Editor
+                                            content={content}
+                                            editable={isEditable}
+                                            onReady={setEditorInstance}
+                                            onChange={(newContent) => setContent(newContent)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="a4-page-content" />
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
