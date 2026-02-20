@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import Editor from '../components/Editor';
+import Editor, { MenuBar } from '../components/Editor';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Save } from 'lucide-react';
@@ -128,52 +128,61 @@ export default function PageDetail() {
 
     return (
         <div className="h-full flex flex-col bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
+            {/* Top Toolbar Strip */}
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20">
+                <div className="max-w-[210mm] mx-auto px-6 h-12 flex items-center justify-between gap-4">
+                    <div className="flex-1 flex items-center gap-4">
+                        {isEditable ? (
+                            <input
+                                className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800 rounded transition-colors"
+                                placeholder="Untitled Page"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
+                        ) : (
+                            <h1 className="text-sm font-bold flex-1 text-gray-900 dark:text-gray-100 px-2">{title || 'Untitled'}</h1>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => exportToDocx(title, content)}
+                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600"
+                        >
+                            Export
+                        </Button>
+                        {isEditable && (
+                            <Button
+                                onClick={() => savePage()}
+                                disabled={saving}
+                                className="gap-2 h-8 text-[11px] font-bold px-4"
+                            >
+                                <Save className="h-3.5 w-3.5" />
+                                {saving ? 'Saving...' : 'Save Draft'}
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                {/* RTE Tools Ribbon */}
+                <div className="border-t border-gray-100 dark:border-gray-800/10 h-9 flex items-center bg-white dark:bg-gray-900">
+                    <div className="max-w-[210mm] mx-auto w-full">
+                        {editorInstance && <MenuBar editor={editorInstance} />}
+                    </div>
+                </div>
+            </div>
+
+            {/* Document Workspace */}
             <div className="flex-1 overflow-auto">
-                <div className="max-w-[210mm] mx-auto py-12 px-4 sm:px-0">
-                    <div className="bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-800 min-h-[297mm] relative mb-12">
+                <div className="max-w-[210mm] mx-auto py-8">
+                    <div className="bg-white dark:bg-gray-900 shadow-2xl border border-gray-200 dark:border-gray-800 min-h-[297mm] relative mb-20 rounded-t-sm">
                         <div className="p-[2cm]">
-                            <div className="mb-8">
-                                <div className="flex items-center justify-between gap-4">
-                                    {isEditable ? (
-                                        <Input
-                                            className="text-2xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent text-gray-900 dark:text-gray-100"
-                                            placeholder="Untitled"
-                                            value={title}
-                                            onChange={(e) => setTitle(e.target.value)}
-                                        />
-                                    ) : (
-                                        <h1 className="text-2xl font-bold flex-1 text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
-                                    )}
-
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => exportToDocx(title, content)}
-                                            className="h-8 text-[11px] font-bold"
-                                        >
-                                            Export
-                                        </Button>
-                                        {isEditable && (
-                                            <Button
-                                                onClick={() => savePage()}
-                                                disabled={saving}
-                                                className="gap-2 h-8 text-[11px] font-bold"
-                                            >
-                                                <Save className="h-3.5 w-3.5" />
-                                                {saving ? 'Saving...' : 'Save'}
-                                            </Button>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="h-4 text-[10px] text-muted-foreground mt-1">
-                                    {saving ? 'Saving changes...' : (isNewDraft ? 'Not saved yet' : (isEditable ? 'Editing mode' : 'Read-only view'))}
-                                </div>
-                            </div>
-
                             <Editor
                                 content={content}
                                 editable={isEditable}
+                                onReady={setEditorInstance}
                                 onChange={(newContent) => setContent(newContent)}
                             />
                         </div>
