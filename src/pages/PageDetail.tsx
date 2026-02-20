@@ -98,8 +98,10 @@ export default function PageDetail() {
                 if (error) throw error;
                 // Update local stores for immediate feedback
                 updateTab(id, { title });
-                updatePage(id, { title });
+                updatePage(id, { title: title });
             }
+            // Return to view mode after saving
+            setSearchParams({});
         } catch (error) {
             console.error('Error saving page:', error);
         } finally {
@@ -173,10 +175,9 @@ export default function PageDetail() {
                 </div>
             </div>
 
-            {/* Document Workspace */}
             <div className="flex-1 overflow-auto">
                 <div className="max-w-[210mm] mx-auto py-8">
-                    <div className="bg-white dark:bg-gray-900 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-gray-200 dark:border-gray-800 min-h-[297mm] relative mb-20 rounded-t-sm">
+                    <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 min-h-[297mm] relative mb-20 rounded-t-sm shadow-none">
                         <div className="p-[2cm]">
                             <Editor
                                 content={content}

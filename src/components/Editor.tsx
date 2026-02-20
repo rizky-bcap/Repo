@@ -124,7 +124,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     disabled={!editor.can().chain().focus().toggleBold().run()}
                     className={cn("h-8 w-8", editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
                 >
-                    <Bold className="h-5 w-5" />
+                    <Bold className="h-6 w-6" />
                 </Button>
                 <Button
                     variant="ghost"
@@ -133,7 +133,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     disabled={!editor.can().chain().focus().toggleItalic().run()}
                     className={cn("h-8 w-8", editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800' : '')}
                 >
-                    <Italic className="h-5 w-5" />
+                    <Italic className="h-6 w-6" />
                 </Button>
             </div>
 
