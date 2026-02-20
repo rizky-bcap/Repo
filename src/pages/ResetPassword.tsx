@@ -40,9 +40,9 @@ export default function ResetPassword() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Reset Password</CardTitle>
+                    <CardTitle>Setup New Password</CardTitle>
                     <CardDescription>
-                        Enter your new password below.
+                        Please enter your new password to secure your account.
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleResetPassword}>
