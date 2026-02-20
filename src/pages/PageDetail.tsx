@@ -129,48 +129,46 @@ export default function PageDetail() {
     return (
         <div className="h-full flex flex-col bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
             {/* Ribbon Tier 1: Title & Actions */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-30 h-11 flex items-center shadow-sm">
-                <div className="max-w-[210mm] mx-auto w-full px-6 flex items-center justify-between gap-4">
-                    <div className="flex-1 flex items-center">
-                        {isEditable ? (
-                            <input
-                                className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800/50 rounded transition-colors w-full"
-                                placeholder="Untitled Page"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                            />
-                        ) : (
-                            <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
-                        )}
-                    </div>
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-30 h-11 flex items-center shadow-sm px-6">
+                <div className="flex-1 flex items-center">
+                    {isEditable ? (
+                        <input
+                            className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800/50 rounded transition-colors w-full max-w-sm"
+                            placeholder="Untitled Page"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    ) : (
+                        <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
+                    )}
+                </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => exportToDocx(title, content)}
+                        className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                    >
+                        Export
+                    </Button>
+                    <div className="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1" />
+                    {isEditable && (
                         <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => exportToDocx(title, content)}
-                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                            onClick={() => savePage()}
+                            disabled={saving}
+                            className="gap-2 h-8 text-[11px] font-bold px-4"
                         >
-                            Export
+                            <Save className="h-3.5 w-3.5" />
+                            {saving ? 'Saving...' : 'Save Draft'}
                         </Button>
-                        <div className="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1" />
-                        {isEditable && (
-                            <Button
-                                onClick={() => savePage()}
-                                disabled={saving}
-                                className="gap-2 h-8 text-[11px] font-bold px-4"
-                            >
-                                <Save className="h-3.5 w-3.5" />
-                                {saving ? 'Saving...' : 'Save Draft'}
-                            </Button>
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
 
             {/* Ribbon Tier 2: RTE Tools */}
             <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-11 flex items-center shadow-sm">
-                <div className="max-w-[210mm] mx-auto w-full">
+                <div className="w-full">
                     {editorInstance && <MenuBar editor={editorInstance} />}
                 </div>
             </div>

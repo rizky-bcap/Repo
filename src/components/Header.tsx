@@ -29,22 +29,22 @@ export default function Header() {
 
     return (
         <header className="h-11 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between sticky top-0 z-50 transition-colors">
-            {/* Left: Logo */}
-            <div className="flex items-center h-full px-6 border-r border-gray-200 dark:border-gray-800 min-w-60">
-                <Link
-                    to="/"
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                    onClick={() => clearActiveTab()}
-                >
-                    <h1 className="text-sm font-bold tracking-tight text-gray-600">
-                        Repo
-                    </h1>
-                </Link>
-            </div>
-
-            {/* Middle: Search */}
-            <div className="flex-1 h-full flex items-center justify-center">
-                <GlobalSearch />
+            {/* Left: Logo & Search */}
+            <div className="flex-1 flex items-center h-full">
+                <div className="flex items-center h-full px-6 border-r border-gray-200 dark:border-gray-800 min-w-60">
+                    <Link
+                        to="/"
+                        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                        onClick={() => clearActiveTab()}
+                    >
+                        <h1 className="text-sm font-bold tracking-tight text-gray-600">
+                            Repo
+                        </h1>
+                    </Link>
+                </div>
+                <div className="px-6">
+                    <GlobalSearch />
+                </div>
             </div>
 
             {/* Right: Actions */}
