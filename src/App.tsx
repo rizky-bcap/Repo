@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthLayout from './layouts/AuthLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import PageDetail from './pages/PageDetail';
 
@@ -29,6 +30,7 @@ function App() {
         <Routes>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
 
           <Route element={<ProtectedRoute />}>

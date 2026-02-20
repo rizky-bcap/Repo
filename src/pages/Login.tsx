@@ -72,6 +72,29 @@ export default function Login() {
                     <Button type="submit" className="w-full" disabled={loading}>
                         {loading ? 'Signing in...' : 'Sign In'}
                     </Button>
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            if (!email) {
+                                setError('Please enter your email address first.');
+                                return;
+                            }
+                            setLoading(true);
+                            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                                redirectTo: `${window.location.origin}/reset-password`,
+                            });
+                            setLoading(false);
+                            if (error) {
+                                setError(error.message);
+                            } else {
+                                setError(null);
+                                alert('Password reset email sent! Please check your inbox.');
+                            }
+                        }}
+                        className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
+                    >
+                        Forgot password?
+                    </button>
                 </CardFooter>
             </form>
         </Card>
