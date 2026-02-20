@@ -4,12 +4,10 @@ import { saveAs } from 'file-saver';
 export async function exportToDocx(title: string, content: any) {
     if (!content || !content.content) return;
 
-    const sections = [];
-
     // Simple mapper from Tiptap JSON to docx Paragraphs
     const children = content.content.map((node: any) => {
         if (node.type === 'heading') {
-            let level = HeadingLevel.HEADING_1;
+            let level: any = HeadingLevel.HEADING_1;
             if (node.attrs?.level === 2) level = HeadingLevel.HEADING_2;
             if (node.attrs?.level === 3) level = HeadingLevel.HEADING_3;
 
