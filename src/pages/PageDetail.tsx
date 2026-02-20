@@ -128,31 +128,32 @@ export default function PageDetail() {
 
     return (
         <div className="h-full flex flex-col bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
-            {/* Top Toolbar Strip */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20">
-                <div className="max-w-[210mm] mx-auto px-6 h-12 flex items-center justify-between gap-4">
-                    <div className="flex-1 flex items-center gap-4">
+            {/* Ribbon Tier 1: Title & Actions */}
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-30 h-11 flex items-center shadow-sm">
+                <div className="max-w-[210mm] mx-auto w-full px-6 flex items-center justify-between gap-4">
+                    <div className="flex-1 flex items-center">
                         {isEditable ? (
                             <input
-                                className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800 rounded transition-colors"
+                                className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800/50 rounded transition-colors w-full"
                                 placeholder="Untitled Page"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
                         ) : (
-                            <h1 className="text-sm font-bold flex-1 text-gray-900 dark:text-gray-100 px-2">{title || 'Untitled'}</h1>
+                            <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
                         )}
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => exportToDocx(title, content)}
-                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600"
+                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                         >
                             Export
                         </Button>
+                        <div className="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1" />
                         {isEditable && (
                             <Button
                                 onClick={() => savePage()}
@@ -165,12 +166,12 @@ export default function PageDetail() {
                         )}
                     </div>
                 </div>
+            </div>
 
-                {/* RTE Tools Ribbon */}
-                <div className="border-t border-gray-100 dark:border-gray-800/10 h-9 flex items-center bg-white dark:bg-gray-900">
-                    <div className="max-w-[210mm] mx-auto w-full">
-                        {editorInstance && <MenuBar editor={editorInstance} />}
-                    </div>
+            {/* Ribbon Tier 2: RTE Tools */}
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-20 h-11 flex items-center shadow-sm">
+                <div className="max-w-[210mm] mx-auto w-full">
+                    {editorInstance && <MenuBar editor={editorInstance} />}
                 </div>
             </div>
 
