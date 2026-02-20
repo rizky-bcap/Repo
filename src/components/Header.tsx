@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTabs } from '../store/useTabs';
-import TabBar from './TabBar';
+import GlobalSearch from './GlobalSearch';
 import { Button } from './ui/button';
 import {
     LogOut,
@@ -42,9 +42,9 @@ export default function Header() {
                 </Link>
             </div>
 
-            {/* Middle: Tabs */}
-            <div className="flex-1 h-full overflow-hidden">
-                <TabBar />
+            {/* Middle: Search */}
+            <div className="flex-1 h-full flex items-center justify-center">
+                <GlobalSearch />
             </div>
 
             {/* Right: Actions */}
