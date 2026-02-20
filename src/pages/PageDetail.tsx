@@ -134,7 +134,7 @@ export default function PageDetail() {
                 <div className="flex-1 flex items-center">
                     {isEditable ? (
                         <input
-                            className="text-sm font-bold border-none shadow-none focus:ring-0 px-2 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-gray-50 dark:bg-gray-800/50 rounded transition-colors w-full max-w-sm"
+                            className="text-sm font-bold border-none shadow-none focus:ring-0 px-0 py-1 h-7 placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent transition-colors w-full"
                             placeholder="Untitled Page"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
