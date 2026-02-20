@@ -18,7 +18,7 @@ export default function DashboardLayout() {
     }, [activeTabId, navigate, location.pathname]);
 
     return (
-        <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+        <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
             <Header />
             <div className="flex flex-1 overflow-hidden">
                 <Sidebar />

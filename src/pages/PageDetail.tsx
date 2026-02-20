@@ -131,13 +131,13 @@ export default function PageDetail() {
                 <div className="flex items-center justify-between gap-4">
                     {isEditable ? (
                         <Input
-                            className="text-xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto placeholder:text-gray-300 dark:placeholder:text-slate-700 flex-1 bg-transparent text-slate-900 dark:text-slate-100"
+                            className="text-xl font-bold border-none shadow-none focus-visible:ring-0 px-0 h-auto placeholder:text-gray-300 dark:placeholder:text-gray-700 flex-1 bg-transparent text-gray-900 dark:text-gray-100"
                             placeholder="Untitled"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
                     ) : (
-                        <h1 className="text-xl font-bold flex-1 text-slate-900 dark:text-slate-100">{title || 'Untitled'}</h1>
+                        <h1 className="text-xl font-bold flex-1 text-gray-900 dark:text-gray-100">{title || 'Untitled'}</h1>
                     )}
 
                     {isEditable && (

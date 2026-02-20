@@ -245,8 +245,8 @@ export default function PageTree() {
                         className={cn(
                             "group flex items-center gap-1 py-1 px-2 rounded-md transition-all cursor-pointer select-none relative",
                             isActive
-                                ? "bg-white dark:bg-slate-800 text-primary shadow-sm border border-slate-200 dark:border-slate-700 font-medium"
-                                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800",
+                                ? "bg-white dark:bg-gray-800 text-primary shadow-sm border border-gray-200 dark:border-gray-700 font-medium"
+                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800",
                             isTarget && dropTarget?.type === 'inner' && "bg-primary/10 ring-1 ring-primary/30",
                             draggingId === node.id && "opacity-30 border-dashed border-primary"
                         )}
@@ -263,7 +263,7 @@ export default function PageTree() {
                             {node.children.length > 0 ? (
                                 <button
                                     onClick={(e) => toggleExpanded(node.id, e)}
-                                    className="p-0.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-500"
+                                    className="p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500"
                                 >
                                     {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                                 </button>
@@ -283,21 +283,21 @@ export default function PageTree() {
                                     addTab({ id: node.id, title: node.title });
                                     navigate(`/pages/${node.id}?edit=true`);
                                 }}
-                                className="text-slate-400 hover:text-primary p-0.5 rounded hover:bg-slate-200"
+                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200"
                                 title="Edit page"
                             >
                                 <Pencil className="h-3 w-3" />
                             </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); createPage(node.id); }}
-                                className="text-slate-400 hover:text-primary p-0.5 rounded hover:bg-slate-200"
+                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200"
                                 title="Add subpage"
                             >
                                 <Plus className="h-3 w-3" />
                             </button>
                             <button
                                 onClick={(e) => deletePage(node.id, e)}
-                                className="text-slate-400 hover:text-red-500 p-0.5 rounded hover:bg-red-50"
+                                className="text-gray-400 hover:text-red-500 p-0.5 rounded hover:bg-red-50"
                                 title="Delete"
                             >
                                 <Trash2 className="h-3 w-3" />
@@ -321,7 +321,7 @@ export default function PageTree() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="h-5 w-5 text-slate-400 hover:text-slate-800 dark:hover:text-white mr-2"
+                    className="h-5 w-5 text-gray-400 hover:text-gray-800 dark:hover:text-white mr-2"
                     onClick={() => createPage(null)}
                     title="New Root Page"
                 >
@@ -350,12 +350,12 @@ export default function PageTree() {
                 }}
             >
                 {loading ? (
-                    <div className="text-[10px] text-slate-400 px-2 uppercase tracking-tight">Loading...</div>
+                    <div className="text-[10px] text-gray-400 px-2 uppercase tracking-tight">Loading...</div>
                 ) : (
                     renderTreeNodes(tree)
                 )}
                 {!loading && pages.length === 0 && (
-                    <div className="text-[10px] text-slate-400 px-2 py-4 text-center uppercase border-2 border-dashed border-slate-200 rounded-lg">
+                    <div className="text-[10px] text-gray-400 px-2 py-4 text-center uppercase border-2 border-dashed border-gray-200 rounded-lg">
                         No pages detected
                     </div>
                 )}

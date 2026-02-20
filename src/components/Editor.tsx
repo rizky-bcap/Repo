@@ -82,9 +82,9 @@ const MenuBar = ({ editor }: { editor: any }) => {
     };
 
     return (
-        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-slate-800 p-2 bg-white dark:bg-slate-900 sticky top-0 z-10 flex-wrap">
+        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-800 p-2 bg-white dark:bg-gray-900 sticky top-0 z-10 flex-wrap">
             <select
-                className="h-8 px-2 border border-gray-200 dark:border-slate-800 rounded text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none"
+                className="h-8 px-2 border border-gray-200 dark:border-gray-800 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none"
                 style={{ fontFamily: editor.getAttributes('textStyle').fontFamily }}
                 onChange={(e) => setFontFamily(e.target.value)}
                 value={editor.getAttributes('textStyle').fontFamily || 'default'}
@@ -95,9 +95,9 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 <option value="Roboto, sans-serif">Roboto</option>
                 <option value="'Times New Roman', serif">Times New Roman</option>
             </select>
-            <div className="w-px h-6 bg-gray-200 dark:bg-slate-800 mx-1" />
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1" />
             <select
-                className="h-8 px-2 border border-gray-200 dark:border-slate-800 rounded text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none"
+                className="h-8 px-2 border border-gray-200 dark:border-gray-800 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none"
                 onChange={(e) => setFontSize(e.target.value)}
                 value={editor.getAttributes('textStyle').fontSize || 'default'}
             >
@@ -111,13 +111,13 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 <option value="20px">20px</option>
                 <option value="24px">24px</option>
             </select>
-            <div className="w-px h-6 bg-gray-200 dark:bg-slate-800 mx-1" />
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1" />
             <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 disabled={!editor.can().chain().focus().toggleBold().run()}
-                className={cn(editor.isActive('bold') ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400')}
+                className={cn(editor.isActive('bold') ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
             >
                 <Bold className="h-4 w-4" />
             </Button>
@@ -126,7 +126,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 size="sm"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 disabled={!editor.can().chain().focus().toggleItalic().run()}
-                className={cn(editor.isActive('italic') ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('italic') ? 'bg-gray-200' : '')}
             >
                 <Italic className="h-4 w-4" />
             </Button>
@@ -135,7 +135,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                className={cn(editor.isActive('heading', { level: 1 }) ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : '')}
             >
                 <Heading1 className="h-4 w-4" />
             </Button>
@@ -143,7 +143,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={cn(editor.isActive('heading', { level: 2 }) ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : '')}
             >
                 <Heading2 className="h-4 w-4" />
             </Button>
@@ -152,7 +152,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={cn(editor.isActive('bulletList') ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('bulletList') ? 'bg-gray-200' : '')}
             >
                 <List className="h-4 w-4" />
             </Button>
@@ -160,7 +160,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={cn(editor.isActive('orderedList') ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('orderedList') ? 'bg-gray-200' : '')}
             >
                 <ListOrdered className="h-4 w-4" />
             </Button>
@@ -168,7 +168,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                className={cn(editor.isActive('blockquote') ? 'bg-slate-200' : '')}
+                className={cn(editor.isActive('blockquote') ? 'bg-gray-200' : '')}
             >
                 <Quote className="h-4 w-4" />
             </Button>
@@ -216,11 +216,11 @@ export default function Editor({ content, onChange, editable = true }: EditorPro
 
     return (
         <div className={cn(
-            "border rounded-md bg-white dark:bg-slate-900 shadow-sm overflow-hidden flex flex-col h-full border-gray-200 dark:border-slate-800",
+            "border rounded-md bg-white dark:bg-gray-900 shadow-sm overflow-hidden flex flex-col h-full border-gray-200 dark:border-gray-800",
             !editable && "border-transparent shadow-none bg-transparent"
         )}>
             {editable && <MenuBar editor={editor} />}
-            <EditorContent editor={editor} className="flex-1 overflow-auto bg-white dark:bg-slate-900" />
+            <EditorContent editor={editor} className="flex-1 overflow-auto bg-white dark:bg-gray-900" />
         </div>
     );
 }

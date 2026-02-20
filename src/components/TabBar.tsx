@@ -42,24 +42,24 @@ export default function TabBar() {
                     key={tab.id}
                     onClick={() => handleTabClick(tab.id)}
                     className={cn(
-                        "group flex items-center gap-2 px-3 h-full text-xs min-w-[100px] max-w-[160px] border-r border-slate-200 dark:border-slate-800 cursor-pointer select-none transition-colors relative",
+                        "group flex items-center gap-2 px-2 h-full text-xs min-w-[80px] max-w-[140px] border-r border-gray-200 dark:border-gray-800 cursor-pointer select-none transition-colors relative",
                         activeTabId === tab.id
-                            ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold"
-                            : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                            ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-semibold"
+                            : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900"
                     )}
                 >
                     <span className="truncate flex-1">{tab.title || 'Untitled'}</span>
                     <button
                         onClick={(e) => handleCloseTab(e, tab.id)}
                         className={cn(
-                            "p-0.5 rounded-sm opacity-0 group-hover:opacity-100 hover:bg-slate-200 dark:hover:bg-slate-800 transition-opacity",
+                            "p-0.5 rounded-sm opacity-0 group-hover:opacity-100 hover:bg-gray-200 dark:hover:bg-gray-800 transition-opacity",
                             activeTabId === tab.id && "opacity-100"
                         )}
                     >
                         <X className="h-3 w-3" />
                     </button>
                     {activeTabId === tab.id && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-600 dark:bg-slate-400" />
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-600 dark:bg-gray-400" />
                     )}
                 </div>
             ))}

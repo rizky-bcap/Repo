@@ -28,16 +28,16 @@ export default function Header() {
     const toggleTheme = () => setIsDark(!isDark);
 
     return (
-        <header className="h-11 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between sticky top-0 z-50 transition-colors">
+        <header className="h-7 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between sticky top-0 z-50 transition-colors">
             {/* Left: Logo */}
-            <div className="flex items-center h-full px-6 border-r border-slate-200 dark:border-slate-800 min-w-60">
+            <div className="flex items-center h-full px-6 border-r border-gray-200 dark:border-gray-800 min-w-60">
                 <Link
                     to="/"
                     className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                     onClick={() => clearActiveTab()}
                 >
-                    <h1 className="text-lg font-bold tracking-tight text-slate-600">
-                        Repostory
+                    <h1 className="text-sm font-bold tracking-tight text-gray-600">
+                        Repo
                     </h1>
                 </Link>
             </div>
@@ -48,32 +48,32 @@ export default function Header() {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-2 px-4 h-full border-l border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-2 px-4 h-full border-l border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-0.5 mr-2">
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-500 hover:text-slate-800 dark:hover:text-white" onClick={toggleTheme}>
-                        {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-gray-500 hover:text-gray-800 dark:hover:text-white" onClick={toggleTheme}>
+                        {isDark ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-500 hover:text-slate-800 dark:hover:text-white">
-                        <Bell className="h-3.5 w-3.5" />
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-gray-500 hover:text-gray-800 dark:hover:text-white">
+                        <Bell className="h-3 w-3" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-500 hover:text-slate-800 dark:hover:text-white">
-                        <Settings className="h-3.5 w-3.5" />
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-gray-500 hover:text-gray-800 dark:hover:text-white">
+                        <Settings className="h-3 w-3" />
                     </Button>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 hidden lg:block">
+                    <span className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 hidden lg:block">
                         {user?.email?.split('@')[0] || 'User'}
                     </span>
 
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="gap-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 px-2 h-7"
+                        className="gap-1 text-gray-500 hover:text-red-600 hover:bg-red-50 px-1.5 h-5"
                         onClick={signOut}
                     >
-                        <LogOut className="h-3 w-3" />
-                        <span className="text-[10px] font-bold">Sign out</span>
+                        <LogOut className="h-2.5 w-2.5" />
+                        <span className="text-[9px] font-bold">Sign out</span>
                     </Button>
                 </div>
             </div>
