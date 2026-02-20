@@ -150,16 +150,18 @@ export default function PageDetail() {
                             variant="ghost"
                             size="sm"
                             onClick={() => setSearchParams({ edit: 'true' })}
-                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                         >
                             Edit
                         </Button>
                     )}
                     {isEditable && (
                         <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => savePage()}
                             disabled={saving}
-                            className="h-8 text-[11px] font-bold px-4"
+                            className="h-8 text-[11px] font-bold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                         >
                             {saving ? 'Saving...' : 'Save'}
                         </Button>
