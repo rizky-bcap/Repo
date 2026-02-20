@@ -3,7 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { FontFamily } from '@tiptap/extension-font-family';
 import { Extension, Node } from '@tiptap/core';
-
+import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { useEffect } from 'react';
 
@@ -110,7 +110,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
     };
 
     return (
-        <div className="flex items-center gap-1.5 px-6 bg-white dark:bg-gray-900 sticky top-0 z-10 flex-nowrap h-10 scrollbar-hide overflow-x-auto w-full">
+        <div className="flex items-center gap-1.5 px-6 bg-white dark:bg-gray-900 sticky top-0 z-10 flex-nowrap h-10 overflow-hidden w-full">
             <div className="flex items-center gap-1.5 shrink-0">
                 <select
                     className="h-8 px-2 border border-gray-200 dark:border-gray-800 rounded text-[11px] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none transition-colors"
@@ -140,6 +140,29 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     <option value="20px">20px</option>
                     <option value="24px">24px</option>
                 </select>
+            </div>
+
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1 shrink-0" />
+
+            <div className="flex items-center gap-0.5 shrink-0">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    disabled={!editor.can().chain().focus().toggleBold().run()}
+                    className={cn("h-8 w-8", editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
+                >
+                    <span className="font-bold text-sm">B</span>
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    disabled={!editor.can().chain().focus().toggleItalic().run()}
+                    className={cn("h-8 w-8", editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
+                >
+                    <span className="italic text-sm">I</span>
+                </Button>
             </div>
         </div>
     );
