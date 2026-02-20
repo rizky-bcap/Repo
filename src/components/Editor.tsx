@@ -3,8 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { FontFamily } from '@tiptap/extension-font-family';
 import { Extension } from '@tiptap/core';
-import { Button } from './ui/button';
-import { MdFormatBold, MdFormatItalic, MdFormatListBulleted, MdFormatListNumbered, MdLooksOne, MdLooksTwo, MdFormatQuote } from 'react-icons/md';
+
 import { cn } from '../lib/utils';
 import { useEffect } from 'react';
 
@@ -112,79 +111,6 @@ export const MenuBar = ({ editor }: { editor: any }) => {
                     <option value="20px">20px</option>
                     <option value="24px">24px</option>
                 </select>
-            </div>
-
-            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1 shrink-0" />
-
-            <div className="flex items-center gap-0.5 shrink-0">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    disabled={!editor.can().chain().focus().toggleBold().run()}
-                    className={cn("h-8 w-8", editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400')}
-                >
-                    <MdFormatBold className="h-8 w-8" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    disabled={!editor.can().chain().focus().toggleItalic().run()}
-                    className={cn("h-8 w-8", editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdFormatItalic className="h-8 w-8" />
-                </Button>
-            </div>
-
-            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1 shrink-0" />
-
-            <div className="flex items-center gap-0.5 shrink-0">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                    className={cn("h-8 w-8", editor.isActive('heading', { level: 1 }) ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdLooksOne className="h-8 w-8" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={cn("h-8 w-8", editor.isActive('heading', { level: 2 }) ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdLooksTwo className="h-8 w-8" />
-                </Button>
-            </div>
-
-            <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-1 shrink-0" />
-
-            <div className="flex items-center gap-0.5 shrink-0">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={cn("h-8 w-8", editor.isActive('bulletList') ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdFormatListBulleted className="h-8 w-8" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={cn("h-8 w-8", editor.isActive('orderedList') ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdFormatListNumbered className="h-8 w-8" />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                    className={cn("h-8 w-8", editor.isActive('blockquote') ? 'bg-gray-100 dark:bg-gray-800' : '')}
-                >
-                    <MdFormatQuote className="h-8 w-8" />
-                </Button>
             </div>
         </div>
     );
