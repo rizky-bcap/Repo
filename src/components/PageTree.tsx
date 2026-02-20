@@ -20,7 +20,7 @@ export default function PageTree() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const { addTab } = useTabs();
-    const { pages, loading, fetchPages, updatePage } = usePages();
+    const { pages, loading, fetchPages } = usePages();
 
     const [expanded, setExpanded] = useState<Record<string, boolean>>({});
     const [draggingId, setDraggingId] = useState<string | null>(null);
