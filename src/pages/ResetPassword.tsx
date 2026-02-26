@@ -37,9 +37,8 @@ export default function ResetPassword() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader>
+        <Card>
+            <CardHeader>
                     <CardTitle>Setup New Password</CardTitle>
                     <CardDescription>
                         Please enter your new password to secure your account.
@@ -79,7 +78,6 @@ export default function ResetPassword() {
                         </Button>
                     </CardFooter>
                 </form>
-            </Card>
-        </div>
+        </Card>
     );
 }

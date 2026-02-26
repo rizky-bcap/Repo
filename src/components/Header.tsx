@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTabs } from '../store/useTabs';
 import GlobalSearch from './GlobalSearch';
 import { Button } from './ui/button';
+import { useState, useEffect } from 'react';
 import {
     LogOut,
     Settings,
@@ -10,14 +11,13 @@ import {
     Sun,
     Moon
 } from 'lucide-react';
-import React from 'react';
 
 export default function Header() {
     const { signOut, user } = useAuth();
     const { clearActiveTab } = useTabs();
-    const [isDark, setIsDark] = React.useState(document.documentElement.classList.contains('dark'));
+    const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (isDark) {
             document.documentElement.classList.add('dark');
         } else {

@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useTabs } from '../store/useTabs';
-import { usePages } from '../store/usePages';
+import { usePages, type Page } from '../store/usePages';
 import { Button } from './ui/button';
 import { FileText, Plus, Trash2, ChevronRight, ChevronDown, Pencil } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-// Types
-interface Page {
-    id: string;
-    title: string;
-    parent_id: string | null;
-    position: number;
+interface TreeNode extends Page {
+    children: TreeNode[];
 }
 
 export default function PageTree() {
@@ -26,7 +22,7 @@ export default function PageTree() {
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [dropTarget, setDropTarget] = useState<{ id: string, type: 'inner' | 'before' | 'after' } | null>(null);
 
-    const currentPath = window.location.pathname;
+    const { pathname: currentPath } = useLocation();
 
     useEffect(() => {
         if (user) fetchPages(user.id);
@@ -38,7 +34,7 @@ export default function PageTree() {
     };
 
     // --- Tree Construction ---
-    const buildTree = (items: Page[], parentId: string | null = null): any[] => {
+    const buildTree = (items: Page[], parentId: string | null = null): TreeNode[] => {
         return items
             .filter(item => item.parent_id === parentId)
             .sort((a, b) => a.position - b.position)
@@ -223,7 +219,7 @@ export default function PageTree() {
     };
 
     // --- Render Helpers ---
-    const renderTreeNodes = (nodes: any[], level = 0) => {
+    const renderTreeNodes = (nodes: TreeNode[], level = 0) => {
         return nodes.map(node => {
             const isExpanded = expanded[node.id];
             const isActive = currentPath === `/pages/${node.id}`;

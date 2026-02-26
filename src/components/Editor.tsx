@@ -82,13 +82,16 @@ const PageBreak = Node.create({
     },
 });
 
+import type { Editor as TiptapEditor } from '@tiptap/core';
+
 interface EditorProps {
-    content: any;
-    onChange: (content: any) => void;
+    content: unknown;
+    onChange: (content: unknown) => void;
     editable?: boolean;
+    onReady?: (editor: TiptapEditor) => void;
 }
 
-export const MenuBar = ({ editor }: { editor: any }) => {
+export const MenuBar = ({ editor }: { editor: TiptapEditor }) => {
     if (!editor) {
         return null;
     }
@@ -172,7 +175,7 @@ export const MenuBar = ({ editor }: { editor: any }) => {
     );
 };
 
-export default function Editor({ content, onChange, onReady, editable = true }: EditorProps & { onReady?: (editor: any) => void }) {
+export default function Editor({ content, onChange, onReady, editable = true }: EditorProps) {
     const editor = useEditor({
         extensions: [
             StarterKit,

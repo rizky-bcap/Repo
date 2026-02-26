@@ -2,10 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, FileText } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
+
+interface SearchResult {
+    id: string;
+    title: string;
+    content: unknown;
+}
 
 export default function GlobalSearch() {
+    const { user } = useAuth();
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState<any[]>([]);
+    const [results, setResults] = useState<SearchResult[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -54,6 +62,7 @@ export default function GlobalSearch() {
                 const { data, error } = await supabase
                     .from('pages')
                     .select('id, title, content')
+                    .eq('user_id', user?.id)
                     .or(`title.ilike.%${query}%, content->>content.ilike.%${query}%`)
                     .limit(8);
 

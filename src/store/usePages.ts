@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 
-interface Page {
+export interface Page {
     id: string;
     title: string;
     parent_id: string | null;

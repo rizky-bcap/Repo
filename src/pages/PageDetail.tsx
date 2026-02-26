@@ -1,13 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Editor, { MenuBar } from '../components/Editor';
 import { Button } from '../components/ui/button';
-
 import { useTabs } from '../store/useTabs';
 import { usePages } from '../store/usePages';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 // A4 page dimensions in pixels (at 96 DPI)
 const A4_PAGE_HEIGHT_PX = 1122.52;
