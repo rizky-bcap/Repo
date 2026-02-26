@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useTabs } from '../store/useTabs';
 import { usePages, type Page } from '../store/usePages';
 import { Button } from './ui/button';
-import { FileText, Plus, Trash2, ChevronRight, ChevronDown, Pencil } from 'lucide-react';
+import { FileText, Plus, Trash2, ChevronRight, ChevronDown, Pencil, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface TreeNode extends Page {
     children: TreeNode[];
+}
+
+// Module-level helper — avoids redefining on every onDrop call
+function isDescendant(pages: Page[], parentId: string, childId: string): boolean {
+    const childPage = pages.find(p => p.id === childId);
+    if (!childPage || !childPage.parent_id) return false;
+    if (childPage.parent_id === parentId) return true;
+    return isDescendant(pages, parentId, childPage.parent_id);
 }
 
 export default function PageTree() {
@@ -20,7 +28,9 @@ export default function PageTree() {
 
     const [expanded, setExpanded] = useState<Record<string, boolean>>({});
     const [draggingId, setDraggingId] = useState<string | null>(null);
-    const [dropTarget, setDropTarget] = useState<{ id: string, type: 'inner' | 'before' | 'after' } | null>(null);
+    const [dropTarget, setDropTarget] = useState<{ id: string; type: 'inner' | 'before' | 'after' } | null>(null);
+    const [creating, setCreating] = useState(false);
+    const [createError, setCreateError] = useState<string | null>(null);
 
     const { pathname: currentPath } = useLocation();
 
@@ -40,7 +50,7 @@ export default function PageTree() {
             .sort((a, b) => a.position - b.position)
             .map(item => ({
                 ...item,
-                children: buildTree(items, item.id)
+                children: buildTree(items, item.id),
             }));
     };
 
@@ -48,30 +58,34 @@ export default function PageTree() {
 
     // --- Database Operations ---
     const handleMove = async (activeId: string, targetId: string | null, position: number) => {
+        // Save snapshot for revert on DB error
+        const snapshot = usePages.getState().pages;
         // Optimistic update
         usePages.getState().reorderPage(activeId, targetId, position);
 
         try {
             const { error } = await supabase
                 .from('pages')
-                .update({
-                    parent_id: targetId,
-                    position: position
-                })
+                .update({ parent_id: targetId, position })
                 .eq('id', activeId);
 
             if (error) {
+                usePages.setState({ pages: snapshot });
                 console.error('Error moving page:', error);
-                // Revert on error? For now just log. fetchPages would fix it on refresh.
+                return;
             }
             if (targetId) setExpanded(prev => ({ ...prev, [targetId]: true }));
         } catch (error) {
+            usePages.setState({ pages: snapshot });
             console.error('Error moving page:', error);
         }
     };
 
     const createPage = async (parentId: string | null = null) => {
-        if (!user) return;
+        if (!user || creating) return;
+        setCreating(true);
+        setCreateError(null);
+
         const maxPos = pages.length > 0 ? Math.max(...pages.map(p => p.position)) : 0;
         try {
             const { data, error } = await supabase
@@ -80,7 +94,7 @@ export default function PageTree() {
                     user_id: user.id,
                     title: 'Untitled',
                     parent_id: parentId,
-                    position: maxPos + 1
+                    position: maxPos + 1,
                 }])
                 .select()
                 .single();
@@ -92,8 +106,12 @@ export default function PageTree() {
                 navigate(`/pages/${data.id}`);
                 if (parentId) setExpanded(prev => ({ ...prev, [parentId]: true }));
             }
-        } catch (error) {
-            console.error('Error creating page:', error);
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : 'Failed to create page';
+            setCreateError(msg);
+            console.error('Error creating page:', err);
+        } finally {
+            setCreating(false);
         }
     };
 
@@ -113,10 +131,16 @@ export default function PageTree() {
     // --- Drag and Drop Handlers ---
     const onDragStart = (e: React.DragEvent, id: string) => {
         setDraggingId(id);
+        setCreateError(null);
         e.dataTransfer.setData('text/plain', id);
         e.dataTransfer.effectAllowed = 'move';
-        // Make drag image transparent or custom? Let's keep it default for now.
     };
+
+    // Fires for any drag end — drop, cancel, or Escape — ensures state is always cleaned up
+    const onDragEnd = useCallback(() => {
+        setDraggingId(null);
+        setDropTarget(null);
+    }, []);
 
     const onActiveDragOver = (e: React.DragEvent, id: string) => {
         e.preventDefault();
@@ -125,7 +149,7 @@ export default function PageTree() {
 
         const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
         const y = e.clientY - rect.top;
-        const threshold = rect.height / 4; // 25% zone for top/bottom
+        const threshold = rect.height / 4;
 
         if (y < threshold) {
             setDropTarget({ id, type: 'before' });
@@ -136,15 +160,9 @@ export default function PageTree() {
         }
     };
 
+    // relatedTarget-based check: only clears when cursor truly leaves the element
     const onDragLeave = (e: React.DragEvent) => {
-        // Only clear if we're actually leaving the element, not entering a child
-        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-        if (
-            e.clientX < rect.left ||
-            e.clientX >= rect.right ||
-            e.clientY < rect.top ||
-            e.clientY >= rect.bottom
-        ) {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
             setDropTarget(null);
         }
     };
@@ -160,29 +178,20 @@ export default function PageTree() {
             return;
         }
 
-        const activePage = pages.find(p => p.id === activeId);
-        if (!activePage) return;
+        if (!pages.find(p => p.id === activeId)) return;
 
-        // Prevent nesting inside self or children
-        const isDescendant = (parentId: string, childId: string): boolean => {
-            const childPage = pages.find(p => p.id === childId);
-            if (!childPage || !childPage.parent_id) return false;
-            if (childPage.parent_id === parentId) return true;
-            return isDescendant(parentId, childPage.parent_id);
-        };
-
-        if (targetId && (activeId === targetId || isDescendant(activeId, targetId))) {
+        // Prevent dropping into self or own descendants
+        if (targetId && (activeId === targetId || isDescendant(pages, activeId, targetId))) {
             setDraggingId(null);
             setDropTarget(null);
             return;
         }
 
-        // Calculate New Position
         let newParentId: string | null = null;
         let newPosition = 0;
 
         if (targetId === null || (targetId === 'root' && dropTarget.type === 'inner')) {
-            // Dropped on Root Empty Area
+            // Dropped onto root empty area
             newParentId = null;
             const rootPages = pages.filter(p => !p.parent_id && p.id !== activeId);
             newPosition = rootPages.length > 0 ? Math.max(...rootPages.map(p => p.position)) + 1 : 0;
@@ -204,10 +213,14 @@ export default function PageTree() {
 
                 if (dropTarget.type === 'before') {
                     const prev = siblings[targetIdx - 1];
-                    newPosition = prev ? (prev.position + targetPage.position) / 2 : targetPage.position - 1;
-                } else { // dropTarget.type === 'after'
+                    newPosition = prev
+                        ? (prev.position + targetPage.position) / 2
+                        : targetPage.position - 1;
+                } else {
                     const next = siblings[targetIdx + 1];
-                    newPosition = next ? (next.position + targetPage.position) / 2 : targetPage.position + 1;
+                    newPosition = next
+                        ? (next.position + targetPage.position) / 2
+                        : targetPage.position + 1;
                 }
             }
         }
@@ -218,7 +231,7 @@ export default function PageTree() {
         setDropTarget(null);
     };
 
-    // --- Render Helpers ---
+    // --- Render ---
     const renderTreeNodes = (nodes: TreeNode[], level = 0) => {
         return nodes.map(node => {
             const isExpanded = expanded[node.id];
@@ -230,6 +243,7 @@ export default function PageTree() {
                     <div
                         draggable
                         onDragStart={(e) => onDragStart(e, node.id)}
+                        onDragEnd={onDragEnd}
                         onDragOver={(e) => onActiveDragOver(e, node.id)}
                         onDragLeave={onDragLeave}
                         onDrop={(e) => onDrop(e, node.id)}
@@ -247,7 +261,7 @@ export default function PageTree() {
                             draggingId === node.id && "opacity-30 border-dashed border-primary"
                         )}
                     >
-                        {/* Drag Indicator Lines */}
+                        {/* Drop indicator lines */}
                         {isTarget && dropTarget?.type === 'before' && (
                             <div className="absolute -top-0.5 left-0 right-0 h-0.5 bg-primary rounded-full z-20 pointer-events-none" />
                         )}
@@ -261,7 +275,9 @@ export default function PageTree() {
                                     onClick={(e) => toggleExpanded(node.id, e)}
                                     className="p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500"
                                 >
-                                    {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                                    {isExpanded
+                                        ? <ChevronDown className="h-3 w-3" />
+                                        : <ChevronRight className="h-3 w-3" />}
                                 </button>
                             ) : (
                                 <div className="w-4" />
@@ -279,21 +295,21 @@ export default function PageTree() {
                                     addTab({ id: node.id, title: node.title });
                                     navigate(`/pages/${node.id}?edit=true`);
                                 }}
-                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200"
+                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
                                 title="Edit page"
                             >
                                 <Pencil className="h-3 w-3" />
                             </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); createPage(node.id); }}
-                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200"
+                                className="text-gray-400 hover:text-primary p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
                                 title="Add subpage"
                             >
                                 <Plus className="h-3 w-3" />
                             </button>
                             <button
                                 onClick={(e) => deletePage(node.id, e)}
-                                className="text-gray-400 hover:text-red-500 p-0.5 rounded hover:bg-red-50"
+                                className="text-gray-400 hover:text-red-500 p-0.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
                                 title="Delete"
                             >
                                 <Trash2 className="h-3 w-3" />
@@ -313,19 +329,31 @@ export default function PageTree() {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="px-4 mb-3 flex items-center justify-start py-1 transition-colors">
+            {/* New page button */}
+            <div className="px-3 mb-2 pt-1">
                 <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-5 w-5 text-gray-400 hover:text-gray-800 dark:hover:text-white mr-2"
+                    size="sm"
+                    className="w-full justify-start h-7 px-2 text-xs text-gray-400 hover:text-gray-800 dark:hover:text-white gap-1.5"
                     onClick={() => createPage(null)}
-                    title="New Root Page"
+                    disabled={creating}
+                    title="New page"
                 >
-                    <Plus className="h-3.5 w-3.5" />
+                    {creating
+                        ? <Loader2 className="h-3 w-3 animate-spin" />
+                        : <Plus className="h-3 w-3" />}
+                    New page
                 </Button>
-                {/* Optional: Add a label here if needed, otherwise just keep it minimal */}
             </div>
 
+            {/* Error feedback */}
+            {createError && (
+                <div className="mx-3 mb-2 px-2 py-1.5 text-[10px] text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded border border-red-200 dark:border-red-800 leading-tight">
+                    {createError}
+                </div>
+            )}
+
+            {/* Page tree */}
             <div
                 className="flex-1 overflow-y-auto px-2 space-y-0.5"
                 onDragOver={(e) => {
@@ -335,7 +363,7 @@ export default function PageTree() {
                     }
                 }}
                 onDragLeave={(e) => {
-                    if (pages.length === 0 || e.target === e.currentTarget) {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                         setDropTarget(null);
                     }
                 }}
@@ -351,8 +379,8 @@ export default function PageTree() {
                     renderTreeNodes(tree)
                 )}
                 {!loading && pages.length === 0 && (
-                    <div className="text-[10px] text-gray-400 px-2 py-4 text-center uppercase border-2 border-dashed border-gray-200 rounded-lg">
-                        No pages detected
+                    <div className="text-[10px] text-gray-400 px-2 py-4 text-center uppercase border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+                        No pages yet
                     </div>
                 )}
             </div>
